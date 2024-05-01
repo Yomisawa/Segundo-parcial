@@ -4,7 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/*
+El siguiente programa lleva un control de empleados y los carga en memoria utilizando un List
+el metodo cargar datos debe leer de un archivo llamado empleados.txt
+el metodo guardar datos debe tomar los objetos del arreglo y guardarlos en el archivo.txt
+la clase Empleado es base para EmpleadoPorHoras y EmpleadoTiempoCompleto
+*/
 namespace Parcial_2
 {
     internal class Program
