@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Parcial_2
 {
     internal class Program
     {
-        List<Empleado> empleados = new List<Empleado>();
+        static List<Empleado> empleados = new List<Empleado>();
         static void Main(string[] args)
         {
             bool salir = false;
@@ -103,86 +104,42 @@ namespace Parcial_2
             Console.WriteLine($"\nSalario total pagado a todos los empleados: {salarioTotal:C}");
         }
 
+
         static void GuardarDatos()
         {
             using (StreamWriter sw = new StreamWriter("empleados.txt"))
             {
-                //implementar logica para guardar en un archivo
+                foreach (var empleado in empleados)
+                {
+                    sw.WriteLine($"{empleado.Nombre},{empleado.Salario}");
+                }
             }
-            Console.WriteLine("\nDatos guardados en empleados.txt");
+            Console.WriteLine("\nDatos guardados correctamente en empleados.txt.");
         }
 
         static void CargarDatos()
         {
-            empleados.Clear(); // Limpiar la lista actual antes de cargar nuevos datos
+            empleados.Clear(); // Limpiar la lista antes de cargar nuevos datos
             try
             {
-               //implementar logica para leer los datos de un archivo
-                Console.WriteLine("\nDatos cargados correctamente.");
+                using (StreamReader sr = new StreamReader("empleados.txt"))
+                {
+                    string linea;
+                    while ((linea = sr.ReadLine()) != null)
+                    {
+                        string[] datos = linea.Split(',');
+                        string nombre = datos[0];
+                        double salario = Convert.ToDouble(datos[1]);
+                        empleados.Add(new EmpleadoTiempoCompleto(nombre, salario));
+                    }
+                }
+                Console.WriteLine("\nDatos cargados correctamente desde empleados.txt.");
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine("\nEl archivo de datos no existe.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("\nError al cargar datos: " + ex.Message);
+                Console.WriteLine("\nEl archivo empleados.txt no existe o no se pudo encontrar.");
             }
         }
     }
-
-    // Clase base para representar un empleado
-    class Empleado
-    {
-        public string Nombre { get; set; }
-        public double Salario { get; set; }
-
-        public Empleado(string nombre, double salario)
-        {
-            Nombre = nombre;
-            Salario = salario;
-        }
-
-        public double CalcularSalario()
-        {
-            return Salario;
-        }
-
-        public override string ToString()
-        {
-            return $"Nombre: {Nombre}, Salario: {Salario:C}";
-        }
-    }
-
-    // Clase para representar un empleado a tiempo completo
-    class EmpleadoTiempoCompleto 
-    {
-        public EmpleadoTiempoCompleto(string nombre, double salario) : base(nombre, salario)
-        {
-        }
-    }
-
-    // Clase para representar un empleado por horas
-    class EmpleadoPorHoras : Empleado
-    {
-        public int HorasTrabajadas { get; set; }
-        public double SalarioPorHora { get; set; }
-
-        public EmpleadoPorHoras(string nombre, double salarioPorHora, int horasTrabajadas) : base(nombre, 0)
-        {
-            SalarioPorHora = salarioPorHora;
-            HorasTrabajadas = horasTrabajadas;
-        }
-
-        public override double CalcularSalario()
-        {
-            return SalarioPorHora * HorasTrabajadas;
-        }
-
-        public override string ToString()
-        {
-            return base.ToString() + $", Horas trabajadas: {HorasTrabajadas}, Salario por hora: {SalarioPorHora:C}";
-        }
-    }
-
 }
+add git add .
